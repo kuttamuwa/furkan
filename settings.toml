@@ -1,0 +1,2 @@
+[SP]
+run_sql = "SELECT * FROM TEST_TABLE"
