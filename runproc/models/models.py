@@ -1,7 +1,4 @@
 from django.db import models
-
-
-# Create your models here.
 from runproc.models.managers import TestTableManager
 
 
@@ -10,7 +7,7 @@ class TestTable(models.Model):
     description = models.CharField(null=True, max_length=250)
 
     operator_manager = TestTableManager()
-    objects = models.Manager()  # yazmana gerek yok ben gor diye ekledim.
+    objects = models.Manager()  # yazmana gerek yok ben gör diye ekledim.
 
     def __str__(self):
         return f"Test tablosu : \n" \
