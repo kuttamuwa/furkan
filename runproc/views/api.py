@@ -1,4 +1,4 @@
-from django.db import connections
+from django.db import connections, ProgrammingError
 from django.http import HttpResponse
 from django.shortcuts import render
 from rest_framework import filters
@@ -14,7 +14,7 @@ from runproc.models.models import TestTable
 from runproc.models.serializers import TestTableSerializer
 from config import settings
 
-db_con = connections['default']  # normalde boyle raw kullanmak guzel bi sey degil.
+db_con = connections['default'].cursor()  # normalde boyle raw kullanmak guzel bi sey degil.
 sp_raw = settings.SP['run_sql']  # configten çekelim
 
 
@@ -58,10 +58,11 @@ def run_procedure(request):
     if request.method == 'POST':
         form = SPForm(request.POST)
         if form.is_valid():
-            # cursor = db_con.cursor()
-            # result = cursor.execute(sp_raw)
-            return HttpResponse("<h1> Thanks </h1>", status=200)
-
+            try:
+                result = db_con.execute(sp_raw)
+                return HttpResponse(f"<h1> Thanks Result : {str(result)}</h1> ", status=200)
+            except ProgrammingError as err:
+                return HttpResponse(f"<h1> Error : {str(err)} </h1>")
     else:
         form = SPForm()
 
